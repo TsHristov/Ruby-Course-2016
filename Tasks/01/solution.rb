@@ -18,11 +18,11 @@ end
 
 def substance_state_temperature(substance, desired_state, resulting_unit)
   substance_temperatures = {
-    water: { melting: 0, boiling: 100 },
-    ethanol: { melting: -114, boiling: 78.37 },
-    gold: { melting: 1_064, boiling: 2_700 },
-    silver: { melting: 961.8, boiling: 2_162 },
-    copper: { melting: 1_085, boiling: 2_567 },
+    water:   { melting: 0,     boiling: 100 },
+    ethanol: { melting: -114,  boiling: 78.37 },
+    gold:    { melting: 1_064, boiling: 2_700 },
+    silver:  { melting: 961.8, boiling: 2_162 },
+    copper:  { melting: 1_085, boiling: 2_567 },
     water:   { melting: 0,     boiling: 100 },
     ethanol: { melting: -114,  boiling: 78.37 },
     gold:    { melting: 1_064, boiling: 2_700 },
