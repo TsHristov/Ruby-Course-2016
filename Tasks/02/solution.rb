@@ -22,8 +22,8 @@ class Hash
   def reshape(shape)
     reshaped = {}
     shape.each do |key, value|
-      if value.is_a? String then reshaped[key] = self.fetch_deep(value) end
-      if value.is_a? Hash then reshaped[key] = self.reshape(value) end
+      reshaped[key] = self.fetch_deep(value) if value.is_a? String
+      reshaped[key] = self.reshape(value)    if value.is_a? Hash
     end
     reshaped
   end
