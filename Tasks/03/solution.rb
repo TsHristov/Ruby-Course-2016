@@ -14,6 +14,7 @@ module ParseArguments
   end
 end
 
+# Not the best name ever (work in progress)
 class Base
   include ParseArguments
 
@@ -34,10 +35,15 @@ end
 class Argument < Base
   def initialize(name, block)
     super block, name: name
+    @name = name
   end
 
   def parse(command_runner, arg)
     super
+  end
+
+  def help
+    " [#{@name}]"
   end
 end
 
@@ -55,6 +61,10 @@ class Option < Base
   def parse(command_runner, arg)
       super command_runner, true if option?(arg) && exists?(arg)
   end
+
+  def help
+    "\   -#{@short_name}, --#{@full_name} #{@help}"
+  end
 end
 
 class OptionWithParameter
@@ -62,10 +72,19 @@ class OptionWithParameter
   def initialize(short_name, full_name, help, placeholder, block)
     super block, short_name: short_name, full_name: full_name, \
                        help: help, placeholder: placeholder
+    @short_name = short_name
+    @full_name = full_name
+    @help = help
+    @placeholder = placeholder
   end
 
   def parse(command_runner, arg)
     super
+  end
+
+  def help
+    "\    -#{@short_name}, --#{@full_name}"\
+    +"=#{@placeholder} #{@help}\n"
   end
 end
 
@@ -99,7 +118,10 @@ class CommandParser
   end
 
   def help
-    # Work in progress
-    # %(Usage: #{@arguments.each { |argument| argument.hep }})
+    header = "Usage: #{@command_name}"
+    @arguments.each do |argument|
+      header += "#{argument.help}"
+    end
+    header
   end
 end
