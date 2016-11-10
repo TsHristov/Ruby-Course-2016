@@ -12,18 +12,6 @@ module ParseArguments
     arg.chars.take(1) == ['-'] && arg.length > 2 || \
     arg.chars.take(2) == ['-', '-'] && (arg.chars.include? '=')
   end
-
-  # def get_arguments(argv)
-  #   argv.select { |arg| argument? arg }
-  # end
-  #
-  # def get_options(argv)
-  #   argv.select { |arg| option? arg }
-  # end
-  #
-  # def get_options_with_parameter(argv)
-  #   argv.select { |arg| option_with_parameter? arg }
-  # end
 end
 
 class Base
@@ -69,23 +57,17 @@ class Option < Base
   end
 end
 
-# class OptionWithParameter
-#
-#   def initialize(short_name, full_name, help, placeholder, block)
-#     super block, short_name: short_name, full_name: full_name, \
-#                        help: help, placeholder: placeholder
-#     @short_name  = short_name
-#     @full_name   = full_name
-#     @help        = help
-#     @placeholder = placeholder
-#     @block       = block
-#     p self.attributes
-#   end
-#
-#   def parse(command_runner, arg)
-#     super
-#   end
-# end
+class OptionWithParameter
+
+  def initialize(short_name, full_name, help, placeholder, block)
+    super block, short_name: short_name, full_name: full_name, \
+                       help: help, placeholder: placeholder
+  end
+
+  def parse(command_runner, arg)
+    super
+  end
+end
 
 
 
@@ -105,10 +87,10 @@ class CommandParser
     @arguments << Option.new(short_name, full_name, help, block)
   end
 
-  # def option_with_parameter(short_name, full_name, help, placeholder, &block)
-  #   @arguments <<
-  #   OptionWithParameter.new(short_name, full_name, help, placeholder, block)
-  # end
+  def option_with_parameter(short_name, full_name, help, placeholder, &block)
+    @arguments <<
+    OptionWithParameter.new(short_name, full_name, help, placeholder, block)
+  end
 
   def parse(command_runner, argv)
     @arguments.each.zip(argv) do |element, arg|
@@ -116,51 +98,8 @@ class CommandParser
     end
   end
 
-  private
-
-  # def argument_attributes
-  #   dict = {}
-  #   @arguments.select { |element| element.instance_of? Argument }
-  #             .each { |arg| dict = arg.attributes }
-  #   dict
-  # end
-  #
-  # def option_attributes
-  #   dict = {}
-  #   @arguments.select { |element| element.instance_of? Option }
-  #             .each { |opt| dict = opt.attributes }
-  #   dict
-  # end
-  #
-  # def option_with_parameters_attributes
-  #   dict = {}
-  #   @arguments.select { |element| element.instance_of? OptionWithParameter }
-  #             .each { |opt| dict = opt.attributes }
-  #   dict
-  # end
-  #
-  # def help
-  #   a = argument_attributes
-  #   b = option_attributes
-  #   c = option_with_parameters_attributes
-  #   %(Usage: #{@command_name} [#{a[:name]}]\n\
-  #   -#{b[:short_name]}, --#{b[:full_name]} #{b[:help]}\n\
-  #   -#{c[:short_name]}, --#{c[:full_name]}=#{c[:placeholder]} #{c[:help]}\n)
-  # end
+  def help
+    # Work in progress
+    # %(Usage: #{@arguments.each { |argument| argument.hep }})
+  end
 end
-
-parser = CommandParser.new('rspec')
-
-parser.option('v', 'version', 'show version number') do |runner, value|
-  runner[:version] = value
-end
-
-command_runner = {}
-parser.parse(command_runner, ['--version'])
-
-command_runner #=> {version: true}
-
-command_runner = {}
-parser.parse(command_runner, ['-v'])
-
-p command_runner #=> {version: true}
