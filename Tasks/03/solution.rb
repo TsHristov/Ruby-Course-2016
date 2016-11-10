@@ -18,23 +18,18 @@ end
 class Base
   include ParseArguments
 
-  def initialize(block, **args)
+  def initialize(block)
     @block = block
-    @args = args
   end
 
   def parse(command_runner, arg)
     @block.call command_runner, arg
   end
-
-  def attributes
-    @args
-  end
 end
 
 class Argument < Base
   def initialize(name, block)
-    super block, name: name
+    super block
     @name = name
   end
 
@@ -49,9 +44,10 @@ end
 
 class Option < Base
   def initialize(short_name, full_name, help, block)
-    super block, short_name: short_name, full_name: full_name, help: help
+    super block
     @short_name = short_name
     @full_name  = full_name
+    @help = help
   end
 
   def exists?(arg)
@@ -70,8 +66,7 @@ end
 class OptionWithParameter
 
   def initialize(short_name, full_name, help, placeholder, block)
-    super block, short_name: short_name, full_name: full_name, \
-                       help: help, placeholder: placeholder
+    super block
     @short_name = short_name
     @full_name = full_name
     @help = help
@@ -87,8 +82,6 @@ class OptionWithParameter
     +"=#{@placeholder} #{@help}\n"
   end
 end
-
-
 
 class CommandParser
   include ParseArguments
